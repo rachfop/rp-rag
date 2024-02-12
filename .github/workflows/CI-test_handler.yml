@@ -15,26 +15,6 @@ jobs:
   launch_runner_worker:
     runs-on: ubuntu-latest
 
-    outputs:
-      id: ${{ steps.extract_id.outputs.runpod_job_id }}
-
-    steps:
-      - name: Deploy Worker
-        uses: fjogeleit/http-request-action@v1
-        id: deploy
-        with:
-          url: "https://api.runpod.ai/v2/${{ vars.RUNNER_24GB }}/run"
-          method: "POST"
-          customHeaders: '{"Content-Type": "application/json"}'
-          bearerToken: ${{ secrets.RUNPOD_API_KEY }}
-          data: '{"input":{"github_pat": "${{ secrets.GH_PAT }}", "github_org":"${{ vars.GH_ORG }}"}}'
-
-      - name: Extract Job ID
-        id: extract_id
-        run: |
-          ID=$(echo '${{ steps.deploy.outputs.response }}' | jq -r '.id')
-          echo "::set-output name=runpod_job_id::$ID"
-
   run_tests:
     needs: launch_runner_worker
     runs-on: runpod
@@ -56,18 +36,5 @@ jobs:
 
       - name: Execute Tests
         run: |
-          python src/handler.py --test_input='{"input": {"key": "value"}}'
+          python src/handler.py --test_input='{"input": {"prompt": "What is RunPod"}}'
 
-  cleanup:
-    if: ${{ always() && !success() }}
-    needs: launch_runner_worker
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Terminate and Shutdown Worker
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: "https://api.runpod.ai/v2/${{ vars.RUNNER_24GB }}/cancel/${{ needs.launch_runner_worker.outputs.id }}"
-          method: "POST"
-          customHeaders: '{"Content-Type": "application/json"}'
-          bearerToken: ${{ secrets.RUNPOD_API_KEY }}
