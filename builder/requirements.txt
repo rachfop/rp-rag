@@ -1,0 +1,6 @@
+runpod==1.6.0
+llama-cpp-python==0.2.24
+vllm-haystack==0.1.2
+farm-haystack[inference]==1.24.1
+farm-haystack[converter]==1.24.1
+farm-haystack[file-conversion]==1.24.1

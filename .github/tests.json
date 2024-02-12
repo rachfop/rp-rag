@@ -1,0 +1,8 @@
+[
+  {
+      "input": {
+          "prompt": "What is RunPod"
+      },
+      "expectedOutput": "Answer: RunPod is a cloud computing platform primarily designed for AI and machine learning applications. It offers Pods, Serverless compute, and AI APIs."
+  }
+]
