@@ -1,5 +1,10 @@
 # Rag
 
+```python
+python3.11 -m venv env
+source menv/bin/activate
+```
+
 ## Build and push image
 
 ```command

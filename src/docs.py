@@ -32,15 +32,14 @@ def process_github_folder(api_url, target_dir):
         for item in items:
             if item["type"] == "file" and item["name"].endswith(".md"):
                 # Construct local file path
-                file_path = os.path.join(target_dir, item["path"])
+                file_path = os.path.join(target_dir, os.path.basename(item["path"]))
                 # Make sure target directory exists
-                os.makedirs(os.path.dirname(file_path), exist_ok=True)
+                os.makedirs(target_dir, exist_ok=True)
                 # Download the file
                 download_file(item["download_url"], file_path)
             elif item["type"] == "dir":
                 # Recursively process the directory
-                new_target_dir = os.path.join(target_dir, item["path"])
-                process_github_folder(item["url"], new_target_dir)
+                process_github_folder(item["url"], target_dir)
     else:
         logging.error(
             f"Failed to list folder contents. Status code: {response.status_code}"
